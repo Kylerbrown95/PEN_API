@@ -37,5 +37,7 @@ public class ApiController {
 		return info;
 
 	}
+	
+//TODO: Create a post method which encrypts data..
 
 }
