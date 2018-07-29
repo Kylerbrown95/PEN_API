@@ -1,9 +1,8 @@
 package com.brown.kyle.api.controller;
 
 import java.io.File;
-import java.util.Calendar;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.brown.kyle.api.constants.ApiConstants;
 import com.brown.kyle.api.pojo.Information;
+import com.brown.kyle.api.service.ApiService;
 
 /**
  * 
@@ -25,8 +24,8 @@ import com.brown.kyle.api.pojo.Information;
 @RequestMapping("/api")
 public class ApiController {
 
-	@Value("${api.version}")
-	private String version;
+	@Autowired
+	private ApiService apiService;
 
 	/**
 	 * This method essentially acts as a health check to ensure the api is alive.
@@ -37,16 +36,11 @@ public class ApiController {
 
 	@GetMapping("/info")
 	@ResponseBody
-	public Information getApiInformation() {
+	public ResponseEntity<?> getApiInformation() {
 
-		Information info = new Information();
-		info.setApiDate(Calendar.getInstance().getTime());
-		info.setApiDescription(ApiConstants.DESCRIPTION);
-		info.setApiName(ApiConstants.NAME);
-		info.setApiStatus(true);
-		info.setApiVersion(version);
+		Information info = apiService.healthCheck();
 
-		return info;
+		return new ResponseEntity<>(info, HttpStatus.OK);
 
 	}
 
